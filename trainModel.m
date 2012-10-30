@@ -27,6 +27,13 @@ end
 
 % temporal representation -- before(j,k,a): probability of j is before k within action a
 before = zeros(nVocabulary, nVocabulary, nActions);
+meets = zeros(nVocabulary, nVocabulary, nActions);
+% overlaps = zeros(nVocabulary, nVocabulary, nActions);
+% starts = zeros(nVocabulary, nVocabulary, nActions);
+% during = zeros(nVocabulary, nVocabulary, nActions);
+% finishes = zeros(nVocabulary, nVocabulary, nActions);
+% equals = zeros(nVocabulary, nVocabulary, nActions);
+
 grp_ind = 1;
 for ind=1:nActions
     featuretime_action = features_action{ind};       % feature from one action videos
@@ -38,14 +45,18 @@ for ind=1:nActions
     acc_ngroups_videos_this_action = cumsum(ngroups_videos_this_action);
     acc_ngroups_videos_this_action = [0, acc_ngroups_videos_this_action];
     
+    % relations (before, meets, ...equals) between groups.
     for v=1:nVideo
         for j=acc_ngroups_videos_this_action(v)+1:acc_ngroups_videos_this_action(v+1)
             for k=j+1:acc_ngroups_videos_this_action(v+1)
                 j_start = featuretime_action(1,j);
-                j_end = featuretime_action(2,j) + 15;
+                %j_end = featuretime_action(2,j) + 15;
+                j_end = featuretime_action(2,j);
                 k_start = featuretime_action(1,k);
-                k_end = featuretime_action(2,k) + 15;
+                %k_end = featuretime_action(2,k) + 15;
+                k_end = featuretime_action(2,k);
 
+                % before
                 if (j_end < k_start)
                     before(index_action(j), index_action(k), ind) = ...
                         before(index_action(j), index_action(k), ind) + 1;
@@ -53,17 +64,29 @@ for ind=1:nActions
                     before(index_action(k), index_action(j), ind) = ...
                         before(index_action(k), index_action(j), ind) + 1;                
                 end
+                % meets
+                if (j_end == k_start)
+                    meets(index_action(j), index_action(k), ind) = ...
+                        meets(index_action(j), index_action(k), ind) + 1;
+                elseif (j_start == k_end)
+                    meets(index_action(k), index_action(j), ind) = ...
+                        meets(index_action(k), index_action(j), ind) + 1;                
+                end
+                % 
             end
         end
     end
+        
     
     % normalize the temporal relationships
     before(:,:,ind) = before(:,:,ind)/nGroups_action;
+    meets(:,:,ind) = meets(:,:,ind)/nGroups_action;
     
     grp_ind = grp_ind + nGroups_action;
 end
 
 save('matWordAction', 'matWordAction');
 save('before', 'before');
+save('meets', 'meets');
 
 end

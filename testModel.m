@@ -30,12 +30,12 @@ for d=1:dssize
             
             totalTest_video = totalTest_video + 1;
             
-           groupTrajectory(videolist{fi});     % generate groups using actrec and ganc
+           groupTrajectory(videolist{fi}); % generate groups using actrec and ganc
            features_thisvideo = getFeatures(extractShortFilename(videolist{fi}));
            ngroups_thisvideo = size(features_thisvideo,2);
            
            % compute pair-wise distance between each group and each code
-           hoghof_thisvideo = features_thisvideo(3:end, :);   % 17-dimensional HOGHOF feature
+           hoghof_thisvideo = features_thisvideo(3:end, :); % 17-dimensional HOGHOF feature
            hoghof_thisvideo_norm = dot(hoghof_thisvideo, hoghof_thisvideo, 1);
            dist_codebook_thisvideo = bsxfun(@plus, codebook_norm, hoghof_thisvideo_norm)...
                - 2*(codebook*hoghof_thisvideo);
@@ -62,7 +62,7 @@ for d=1:dssize
                             before_thisvideo(idx_thisvideo(j), idx_thisvideo(k)) + 1;
                     elseif (j_start > k_end)
                         before_thisvideo(idx_thisvideo(k), idx_thisvideo(j)) = ...
-                            before_thisvideo(idx_thisvideo(k), idx_thisvideo(j)) + 1;                
+                            before_thisvideo(idx_thisvideo(k), idx_thisvideo(j)) + 1;
                     end
                 end
             end
@@ -71,7 +71,7 @@ for d=1:dssize
            % determine the action
            % 1: hoghof part
            dist_thisvideo_actions_hoghof = bsxfun(@plus, dot(wordFreq, wordFreq,1), dot(matWordAction, matWordAction, 1))...
-               - 2*(wordFreq'*matWordAction);                       % 1*nAction vector
+               - 2*(wordFreq'*matWordAction); % 1*nAction vector
            dist_thisvideo_actions_hoghof = dist_thisvideo_actions_hoghof / norm(dist_thisvideo_actions_hoghof);
            
            % 2: temporal relationship part
@@ -108,7 +108,7 @@ save('labels', 'labels');
 
 % Get all the videos under a directory
 function [videolist] = get_files(videodir)
-    listing = dir(videodir);
+listing = dir(videodir);
     count = size(listing, 1);
 
     videolist = cell(0);
@@ -127,7 +127,7 @@ function [videolist] = get_files(videodir)
 end
 
 function [files] = files_in_folder(folder)
-    files = cell(0);
+files = cell(0);
     listing = dir(folder);
     count = size(listing, 1);
     for i=1:count

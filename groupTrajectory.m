@@ -15,7 +15,7 @@ raw_file = [file, '.raw'];  % filename+.raw  DO NOT change
 draw_rst = 0;
 
 %% Generate dense trajectory
-fprintf('\n\n Extracting trajectories...');
+fprintf('\n\nExtracting trajectories...\n');
 command = ['./Actrec ', videofile, ' > ', desc_file];
 system(command);
 

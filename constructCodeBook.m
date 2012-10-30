@@ -38,7 +38,8 @@ end
 save('features', 'features');
 save('features_action', 'features_action');
 save('ngroups_video', 'ngroups_video');
-features_hoghof = features(3:end, :);
+%features_hoghof = features(3:end, :);      % removed for mbh
+features_hoghof = features(3:end, :);       % added for mbh
 
 [idx, codebook] = kmeans(features_hoghof', nVocabulary, 'distance', 'sqEuclidean');
 save('codebook', 'codebook');
